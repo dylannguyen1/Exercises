@@ -64,3 +64,17 @@ plot(AirPassengers)
 # Add the complete AirPassengers data to your plot
 rm(AirPassengers)
 points(AirPassengers, type = "l", col = 2, lty = 3)
+#
+###Creating a time series object with ts()
+# Use print() and plot() to view data_vector
+print(data_vector)
+plot(data_vector)
+
+# Convert data_vector to a ts object with start = 2004 and frequency = 4
+time_series <-  ts(data_vector,start = 2004, frequency = 4)
+
+# Use print() and plot() to view time_series
+print(time_series)
+plot(time_series)
+
+
