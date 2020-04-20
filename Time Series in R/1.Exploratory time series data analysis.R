@@ -66,6 +66,7 @@ rm(AirPassengers)
 points(AirPassengers, type = "l", col = 2, lty = 3)
 #
 ###Creating a time series object with ts()
+#
 # Use print() and plot() to view data_vector
 print(data_vector)
 plot(data_vector)
@@ -78,3 +79,35 @@ print(time_series)
 plot(time_series)
 
 
+## Check whether or not an object is a time-series
+# Check whether data_vector and time_series are ts objects
+is.ts(data_vector)
+is.ts(time_series)
+
+# Check whether Nile is a ts object
+is.ts(Nile)
+
+# Check whether AirPassengers is a ts object
+is.ts(AirPassengers)
+
+# Check whether eu_stocks is a ts object
+is.ts(eu_stocks)
+
+# View the start, end, and frequency of eu_stocks
+start(eu_stocks)
+end(eu_stocks)
+frequency(eu_stocks)
+
+#
+## Plotting a time series object
+#
+data(EuStockMarkets)
+
+# Generate a simple plot of eu_stocks
+plot(EuStockMarkets)
+
+# Use ts.plot with eu_stocks
+ts.plot(EuStockMarkets, col = 1:4, xlab = "Year", ylab = "Index Value", main = "Major European Stock Indices, 1991-1998")
+
+# Add a legend to your ts.plot
+legend("topleft", colnames(EuStockMarkets), lty = 1, col = 1:4, bty = "n")
