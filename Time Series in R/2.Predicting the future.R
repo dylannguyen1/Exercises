@@ -125,4 +125,5 @@ ts.plot(random_walk)
 
 # Use abline(0, ...) to add time trend to the figure
 abline(0, int_wn)
-
+#
+## Create cumsum data
