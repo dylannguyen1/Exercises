@@ -74,3 +74,34 @@ white_noise_2 <- arima.sim(model = list(order =c(0,0,0)), n = 100, mean = 100, s
 
 # Plot your white_noise_2 data
 ts.plot(white_noise_2)
+
+#
+## Simulating random walk model
+#
+# Generate a RW model using arima.sim
+random_walk <- arima.sim(model = list(order = c(0, 1, 0)), n = 100)
+
+# Plot random_walk
+ts.plot(random_walk)
+
+# Calculate the first difference series
+random_walk_diff <- diff(random_walk)
+
+# Plot random_walk_diff
+ts.plot(random_walk_diff)
+
+#
+## Simulate the random walk model with a drift
+#
+# Generate a RW model with a drift uing arima.sim
+rw_drift <- arima.sim(model = list(order = c(0, 1, 0)), n = 100, mean = 1)
+
+# Plot rw_drift
+ts.plot(rw_drift)
+
+# Calculate the first difference series
+rw_drift_diff <- diff(rw_drift)
+
+# Plot rw_drift_diff
+ts.plot(rw_drift_diff)
+
