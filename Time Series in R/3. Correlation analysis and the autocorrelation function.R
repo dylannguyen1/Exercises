@@ -61,3 +61,24 @@ apply(eu_percentreturns, MARGIN = 2, FUN = hist, main = "", xlab = "Percentage R
 par(mfrow = c(2,2))
 apply(eu_percentreturns, MARGIN = 2, FUN = qqnorm, main = "")
 qqline(eu_percentreturns)
+
+#
+## Plotting pairs of data
+#
+DAX <- eu_stocks[,1]
+FTSE <- eu_stocks[,4]
+
+## scatter Plot of DAX and FTSE
+plot(DAX,FTSE)
+
+## Scatter Plot matrix of eu_stocks
+pairs(eu_stocks)
+
+## Convert eu_stocks to log returns
+logreturns <- diff(log(eu_stocks))
+
+## Plot logreturns
+plot(logreturns)
+
+## Make a scatterplot matrix of logreturns
+pairs(logreturns)
