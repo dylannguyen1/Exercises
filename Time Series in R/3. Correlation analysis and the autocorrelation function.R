@@ -82,3 +82,69 @@ plot(logreturns)
 
 ## Make a scatterplot matrix of logreturns
 pairs(logreturns)
+
+#
+##Calculating sample covariances and correlations
+#
+DAX_logreturns <- logreturns[,1]
+FTSE_logreturns <- logreturns[,4]
+
+# Use cov() with DAX_logreturns and FTSE_logreturns
+cov(DAX_logreturns, FTSE_logreturns)
+
+# Use cov() with logreturns
+cov(logreturns)
+
+# Use cor() with DAX_logreturns and FTSE_logreturns
+cor(DAX_logreturns, FTSE_logreturns)
+
+# Use cor() with logreturns
+cor(logreturns)
+
+#
+## Autocorrelation
+#
+## correlation for today and yesterday
+cor(stock_A[-100],stock_A[-1])
+## correlation fortoday and two days earlier
+cor(stock_A[-(99:100)],stock_A[-(1:2)])
+## ACF funtion: Autocorrelation by lag
+acf(stock_A, lag.max = 2, plot = FALSE) # not plotting the acf
+
+#
+## Calculating autocorrelations
+#
+
+# Define x_t0 as x[-1]
+x_t0 <- x[-1]
+
+# Define x_t1 as x[-n]
+x_t1 <- x[-n]
+
+# Confirm that x_t0 and x_t1 are (x[t], x[t-1]) pairs  
+head(cbind(x_t0, x_t1))
+
+# Plot x_t0 and x_t1
+plot(x_t0, x_t1)
+
+# View the correlation between x_t0 and x_t1
+cor(x_t0, x_t1)
+
+# Use acf with x
+acf(x, lag.max = 1, plot = FALSE)
+
+# Confirm that difference factor is (n-1)/n
+cor(x_t1, x_t0) * (n-1)/n
+
+# Generate ACF estimates for x up to lag-10
+acf(x, lag.max = 10, plot = FALSE)
+
+## view the ACF of x,y,z
+# View the ACF of x
+acf(z)
+
+# View the ACF of y
+acf(y)
+
+# View the ACF of z
+acf(z)
