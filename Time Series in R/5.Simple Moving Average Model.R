@@ -36,12 +36,79 @@ ts.plot(inflation) ; ts.plot(inflation_changes) ## plot
 acf(inflation_changes, lag.max = 24)
 
 ## fit ma model into inflation
-MA_inflation_changes <- arima(inflation_changes, order = c(0,0,1)) ## first-order ma model
+MA_inflation_changes <- arima(inflation_changes, order = c(0,0,1)) ## order shows first-order ma model
 print(MA_inflation_changes)
-## fitted values
+## fitted values = real value - residual
 MA_inflation_changes_fitted <- inflation_changes - residuals(MA_inflation_changes)
 ## plot fitted values
 plot(MA_inflation_changes_fitted)
 points(MA_inflation_changes_fitted, type = "l", col = "red", lty = 2)
 
+## prediction 
+predict(MA_inflation_changes)$pred
+## standard error
+predict(MA_inflation_changes)$se
 
+## forecasting 6 months ahead:
+predict(MA_inflation_changes, n.ahead = 6)$pred
+predict(MA_inflation_changes, n.ahead = 6)$se ## se 6 months
+
+# Fit the MA model to Nile
+MA <- arima(Nile, order = c(0,0,1))
+print(MA)
+
+#
+##Estimate the simple moving average model
+#
+
+# Fit the MA model to Nile
+MA <- arima(Nile, order = c(0,0,1))
+print(MA)
+
+# Plot Nile and MA_fit 
+ts.plot(Nile)
+MA_fit <- Nile - resid(MA)
+points(MA_fit, type = "l", col = 2, lty = 2)
+
+#
+##Simple forecasts from an estimated MA model
+#
+
+# Make a 1-step forecast based on MA
+predict_MA <- predict(MA)
+
+# Obtain the 1-step forecast using $pred[1]
+predict_MA$pred[1]
+
+# Make a 1-step through 10-step forecast based on MA
+predict(MA,n.ahead = 10)
+
+# Plot the Nile series plus the forecast and 95% prediction intervals
+ts.plot(Nile, xlim = c(1871, 1980))
+MA_forecasts <- predict(MA, n.ahead = 10)$pred
+MA_forecast_se <- predict(MA, n.ahead = 10)$se
+points(MA_forecasts, type = "l", col = 2)
+points(MA_forecasts - 2*MA_forecast_se, type = "l", col = 2, lty = 2)
+points(MA_forecasts + 2*MA_forecast_se, type = "l", col = 2, lty = 2)
+
+##
+###AR vs MA models
+##
+# Fit an AR model to Nile
+AR_Nile<- arima(Nile, order  = c(1,0,0))
+## Calculate AR fit value
+AR_fit <- Nile - residuals(AR_Nile)
+
+# Find correlation between AR_fit and MA_fit
+cor(AR_fit, MA_fit)
+# Find AIC(Akaike information criterion) of AR
+AIC(AR)
+
+# Find AIC(Akaike information criterion) of MA
+AIC(MA)
+
+# Find BIC of AR
+BIC(AR)
+
+# Find BIC of MA
+BIC(MA)
