@@ -26,7 +26,7 @@ help(AirPassengers)
 # Plot AirPassengers
 plot(AirPassengers)
 
-# Plot the DJIA daily closings
+# Plot the DJIA time series daily closings 
 plot(djia$Close)
 
 # Plot the Southern Oscillation Index
