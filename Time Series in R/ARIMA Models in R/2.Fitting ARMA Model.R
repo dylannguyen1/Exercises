@@ -56,3 +56,92 @@ x_fitted$ttable
 #
 ## Fitting an MA(1) model
 #
+x <- arima.sim(model = list(order = c(0, 0, 1), ma = -.8), n = 100)
+
+# Plot x
+plot(x)
+
+# Plot the sample P/ACF of x
+plot(acf2(x))
+
+# Fit an MA(1) to the data and examine the t-table
+x_fit <- sarima(x,p=0,d=0,q=1)
+x_fit$ttable
+
+#
+## ARMA model
+#
+x_arma <- arima.sim(list(order = c(1,0,1),
+                    ar =0.9,
+                    ma = -0.4),
+                    n = 200)
+plot(x_arma, main = "ARMA(1,1)")
+
+x_arma_fit <- sarima(x_arma, p =1, d= 0, q=1)
+x_arma_fit$ttable
+
+#
+##Fitting ARMA(2,1) model
+#
+# astsa is preloaded
+
+# Plot x
+plot(x)
+
+# Plot the sample P/ACF of x
+plot(acf2(x))
+
+# Fit an ARMA(2,1) to the data and examine the t-table
+x_arma_fit <- sarima(x,p =2,d=0,q=1)
+
+dl_varve <- diff(log(varve))
+acf(dl_varve)
+pacf(dl_varve)
+
+##
+### Model choice
+##
+gnpgr <-diff(log(gnp))
+x_ar<-sarima(gnpgr, p =1,d=0,q=0) ## fitting AR(1)
+x_ar$AIC; x_ar$BIC
+
+x_ma_2 <- sarima(gnpgr, p=0,d=0,q=2) ## fitting MA(2)
+x_ma_2$AIC; x_ma_2$BIC
+#
+## Compare AIC and BIC between MA and ARMA
+#
+# Fit an MA(1) to dl_varve.   
+ma_1_fit <- sarima(dl_varve,p=0,d=0,q=1)
+ma_1_fit$AIC; ma_1_fit$BIC
+# Fit an MA(2) to dl_varve. Improvement?
+ma_2_fit <- sarima(dl_varve,p=0,d=0,q=2)
+ma_2_fit$AIC; ma_2_fit$BIC
+
+# Fit an ARMA(1,1) to dl_varve. Improvement?
+arma_fit<-sarima(dl_varve,p=1,d=0,q=1)
+arma_fit$AIC; arma_fit$BIC
+
+#
+##Residual analysis to see MA or ARMA fit better
+#
+# Fit an MA(1) to dl_varve. Examine the residuals  
+sarima(dl_varve,0,0,1)
+
+# Fit an ARMA(1,1) to dl_varve. Examine the residuals
+sarima(dl_varve,1,0,1)
+
+#
+## ARMA get in, using ARMA in oil data
+#
+data(oil); attach(oil)
+# Calculate approximate oil returns
+oil_returns <- diff(log(oil))
+
+# Plot oil_returns. Notice the outliers.
+plot(oil_returns)
+
+# Plot the P/ACF pair for oil_returns
+plot(acf2(oil_returns))
+
+# Assuming both P/ACF are tailing, fit a model to oil_returns
+sarima(oil_returns,1,0,1)
