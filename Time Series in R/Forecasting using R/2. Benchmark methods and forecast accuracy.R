@@ -81,3 +81,54 @@ accuracy(mean_fc, gold)
 
 # Assign one of the two forecasts as bestforecasts
 bestforecasts <- naive_fc
+
+#
+## Evaluating forecast accuracy of seasonal methods
+#
+library(fpp)
+data("vn")
+# Create three training series omitting the last 1, 2, and 3 years
+train1 <- window(vn[, "Melbourne"], end = c(2010, 4))
+train2 <- window(vn[,"Melbourne"],end = c (2009,4))
+train3 <-  window(vn[,"Melbourne"],end = c (2008,4))
+
+# Produce forecasts using snaive()
+fc1 <- snaive(train1, h = 4)
+fc2 <- snaive(train2, h = 4)
+fc3 <- snaive(train3, h = 4)
+
+# Use accuracy() to compare the MAPE of each series
+accuracy(fc1, vn[, "Melbourne"])["Test set", "MAPE"]
+accuracy(fc2, vn[, "Melbourne"])["Test set", "MAPE"]
+accuracy(fc3, vn[, "Melbourne"])["Test set", "MAPE"]
+
+#
+## Time series cross validation
+#
+data(oil)
+## Cross-validation, forecast 1 steps ahead in time
+e <- tsCV(oil, forecastfunction  = naive, h =1)
+mean(e^2, na.rm= TRUE) ## compute root mean squared error, remove na
+
+sq <-function(u){u^2} ## square function
+for(h in 1:10)
+{
+  oil %>% tsCV(forecastfunction = naive, h =h) %>%
+    sq() %>% mean(na.rm = TRUE) %>% print()
+}
+### further ahead you trying to forecast, the least accurate they are
+
+#
+## Time series cross validation with goog data
+#
+data("goog")
+# Compute cross-validated errors for up to 8 steps ahead
+e <- tsCV(goog, forecastfunction = naive, h = 8)
+
+# Compute the MSE values and remove missing values
+mse <- colMeans(e^2, na.rm = TRUE)
+
+# Plot the MSE values against the forecast horizon
+## create a dataframe with value from 1 to 8 and mse
+data.frame(h = 1:8, MSE = mse) %>%
+  ggplot(aes(x = h, y = MSE)) + geom_point()
