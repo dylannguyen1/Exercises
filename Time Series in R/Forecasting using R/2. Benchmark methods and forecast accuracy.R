@@ -53,7 +53,6 @@ beerwn <- FALSE
 #
 ## Training and test set 
 #
-data(oil)
 training <- window(oil, end =2003)
 test <- window(oil, end = 2004)
 fc <-naive(training, h = 10)
