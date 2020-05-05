@@ -131,3 +131,72 @@ mean(e2^2, na.rm = TRUE)
 
 # Plot 10-year forecasts using the best model class
 austa %>% farima(h=10)  %>% autoplot()
+
+#
+## Seasonal ARIMA models
+#
+data("debitcards") ## Iceland debit cards useage
+autoplot(debitcards) + xlab("Year") + ylab("millions ISK")+
+  ggtitle("Retail debit card usage in Iceland")
+fit_seasonal <-auto.arima(debitcards,lambda = 0) ## box-cox lambda = 0 = log transform
+fit_seasonal
+
+fit_seasonal %>% forecast(h=36) %>%
+  autoplot() + xlab("Year")
+
+#
+## Automatic ARIMA models for seasonal time series
+#
+# Check that the logged h02 data have stable variance
+h02 %>% log()%>% autoplot()
+
+# Fit a seasonal ARIMA model to h02 with lambda = 0
+fit <- auto.arima(h02, lambda = 0)
+
+# Summarize the fitted model
+summary(fit)
+
+# Record the amount of lag-1 differencing and seasonal differencing used
+d <- 1
+D <- 1
+
+# Plot 2-year forecasts
+fit %>% forecast(24) %>% autoplot()
+
+#
+## Exploring auto.arima() options
+#
+# Find an ARIMA model for euretail
+fit1 <- auto.arima(euretail)
+
+# Don't use a stepwise search
+fit2 <- auto.arima(euretail, stepwise = FALSE)
+
+# Compute 2-year forecasts from better model based on AICc
+fit2 %>% forecast(h = 8) %>% autoplot()
+
+#
+## Exponential smoothing vs ARIMA on qcement dataset
+#
+# Use 20 years of the qcement data beginning in 1988
+train <- window(qcement, start = 1988, end = c(2007,4))
+
+# Fit an ARIMA and an ETS model to the training data
+fit1 <- auto.arima(train)
+fit2 <- ets(train)
+
+# Check that both models have white noise residuals
+checkresiduals(fit1)
+checkresiduals(fit2)
+
+# Produce forecasts for each model
+fc1 <- forecast(fit1, h = 25)
+fc2 <- forecast(fit2, h = 25)
+
+# Use accuracy() to find better model based on RMSE
+accuracy(fc1, qcement)
+accuracy(fc2, qcement)
+bettermodel <- fit2
+
+
+
