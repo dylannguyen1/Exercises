@@ -198,5 +198,73 @@ accuracy(fc1, qcement)
 accuracy(fc2, qcement)
 bettermodel <- fit2
 
+#
+## Dynamic harmonic regression with Fourier term
+#
+library(fpp2)
+library(fpp)
+data(cafe)
+fit <- auto.arima(cafe,xreg = fourier(cafe, K=1),
+                  seasonal = FALSE,## set seasonal error = false,arima error - non-seasonal
+                  lambda = 0)  ## box-cox transformation with lambda = 0
+fit %>% forecast(xreg = fourier(cafe, K=1, h =24)) %>%
+  autoplot() +ylim(1.6,5.1)
 
+autoplot(fit)
 
+#
+## Forecast weekly data
+#
+# Set up harmonic regressors of order 13
+harmonics <- fourier(gasoline, K = 13)
+
+# Fit regression model with ARIMA errors
+fit <- auto.arima(gasoline, xreg = harmonics, seasonal = FALSE)
+
+# Forecasts next 3 years
+newharmonics <- fourier(gasoline, K = 13, h = 156)
+fc <- forecast(fit, xreg = newharmonics)
+
+# Plot forecasts fc
+autoplot(fc)
+## try to select k with lowest AICc values
+
+#
+##Harmonic regression for multiple seasonality
+#
+data(taylor)#half-hourly electricity demand in England
+## 2 seasonality 48(daily seasonality) and 3*48 = 336 (weekly seasonality)
+# Fit a harmonic regression using order 10 for each type of seasonality
+fit <- tslm(taylor ~ fourier(taylor, K = c(10, 10)))
+
+# Forecast 20 working days ahead
+fc <- forecast(fit, newdata = data.frame(fourier(taylor, K = c(10, 10), h = 20*48)))
+
+# Plot the forecasts
+autoplot(fc)
+
+# Check the residuals of fit
+checkresiduals(fit) ## residuals failed the test badly
+
+#
+## Forecast call bookings
+#
+data("calls") ## 5-minute periods in a working day
+## 2 period: 169 periods of 5-minutes in each working day
+## 5*169 = 845 periods in a working week
+
+# Plot the calls data
+autoplot(calls)
+
+# Set up the xreg matrix
+xreg <- fourier(calls, K = c(10,0))
+
+# Fit a dynamic regression model
+fit <- auto.arima(calls, xreg = xreg, seasonal = FALSE, stationary = TRUE)
+
+# Check the residuals
+checkresiduals(fit)
+
+# Plot forecasts for 10 working days ahead
+fc <- forecast(fit, xreg =  fourier(calls, c(10, 0), h = 1690))
+autoplot(fc)
