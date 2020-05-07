@@ -268,3 +268,35 @@ checkresiduals(fit)
 # Plot forecasts for 10 working days ahead
 fc <- forecast(fit, xreg =  fourier(calls, c(10, 0), h = 1690))
 autoplot(fc)
+
+#
+## TBATS model
+#
+ data("gasoline")
+ gasoline %>% tbats() %>% forecast() %>%
+   autoplot() +
+   xlab("Year") + ylab("thousands barrels per day")
+ ## forecast for gasoline looks a bit too low?
+ 
+ calls %>% window(start = 20) %>%
+   tbats() %>% forecast() %>%
+   autoplot() + xlabs("weeks") + ylabs("Calls")
+ 
+#
+## TBATS model for electricity demand
+#
+ # Plot the gas data
+ autoplot(gas)
+ 
+ # Fit a TBATS model to the gas data
+ fit <- tbats(gas)
+ 
+ # Forecast the series for the next 5 years
+ fc <- forecast(fit,h=60)
+ 
+ # Plot the forecasts
+ autoplot(fc)
+ 
+ # Record the Box-Cox parameter and the order of the Fourier terms
+ lambda <- 0.082
+ K <- 5
