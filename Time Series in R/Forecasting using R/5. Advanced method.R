@@ -62,4 +62,3 @@ forecast(fit, xreg = cbind(20, 20^2, 1))
 
 
 
-
