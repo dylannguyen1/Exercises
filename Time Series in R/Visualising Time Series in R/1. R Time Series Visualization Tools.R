@@ -27,21 +27,6 @@ plot(data$microsoft, main = "microsoft", sub = "Daily closing price since 2015",
 # Change line color to red
 lines(data$microsoft, col = "red")
 
-#
-## Current portfolio description
-#
-data<-read.csv("Existing-portfolio.csv",header=TRUE)
-# Plot the portfolio value 
-plot(data$value, main = "Portfolio Value")
-
-# Plot the portfolio return
-plot(data$return, main = "Portfolio Return")
-
-# Plot a histogram of portfolio return 
-hist(data$return, probability = TRUE)
-
-# Add a density line in red and twice as thick as normal
-lines(density(data$return), col = "red", lwd = 2)
 
 #
 ##Control graphic parameters
