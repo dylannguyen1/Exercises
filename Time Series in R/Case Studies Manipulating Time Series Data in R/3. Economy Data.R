@@ -61,4 +61,16 @@ gdp_approx["1993"]
 ## Lagging and differencing
 #
 
+unemployment <- readRDS("unemployment.RData")
 
+lty = c(1,2)
+labels = c("US Unemployment (%)","MA Unemployment (%)")
+# View a summary of your unemployment data
+summary(unemployment)
+
+# Use na.approx to remove missing values in unemployment data
+unemployment <- na.approx(unemployment)
+
+# Plot new unemployment data
+plot.zoo(unemployment, plot.type = "single", lty = lty)
+legend("topright", lty = lty, legend = labels, bg = "white")
