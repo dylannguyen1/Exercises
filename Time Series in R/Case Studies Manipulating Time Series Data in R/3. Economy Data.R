@@ -55,3 +55,10 @@ plot.xts(gdp_approx, major.format = "%Y")
 
 # Query for GDP in 1993 in gdp_approx
 gdp_approx["1993"]
+
+
+#
+## Lagging and differencing
+#
+
+
